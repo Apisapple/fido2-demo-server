@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'tf.demo'
@@ -32,4 +33,28 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+spotless {
+    java {
+        // This path needs to be relative to each project
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        targetExclude '**/src/reference-test/**', '**/src/main/generated/**', '**/src/test/generated/**', '**/src/jmh/generated/**', '**/build/generated/**'
+        removeUnusedImports()
+        googleJavaFormat('1.25.2')
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    // spotless check applied to build.gradle (groovy) files
+    groovyGradle {
+        target '*.gradle'
+        greclipse('4.31')
+        endWithNewline()
+    }
+    // Below this line are currently only license header tasks
+    format 'ShellScripts', {
+        target '**/*.sh'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
