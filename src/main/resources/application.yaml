@@ -15,3 +15,9 @@ spring:
         format_sql: true
 memo:
   storage: db
+fido:
+  rp-id: localhost
+  rp-name: FIDO2 Demo
+  origins:
+    - http://localhost:8080
+  challenge-ttl: PT5M
