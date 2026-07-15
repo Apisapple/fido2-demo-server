@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.application;
 
 import com.yubico.webauthn.AssertionRequest;
 import com.yubico.webauthn.FinishAssertionOptions;
@@ -16,6 +16,11 @@ import java.security.SecureRandom;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tf.demo.fido2.fido.persistence.FidoCeremonyEntity;
+import tf.demo.fido2.fido.persistence.FidoCredentialEntity;
+import tf.demo.fido2.fido.persistence.FidoCredentialJpaRepository;
+import tf.demo.fido2.fido.persistence.FidoUserEntity;
+import tf.demo.fido2.fido.persistence.FidoUserJpaRepository;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 

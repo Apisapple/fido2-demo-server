@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.config;
 
 import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.data.RelyingPartyIdentity;
@@ -6,6 +6,7 @@ import java.time.Clock;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tf.demo.fido2.fido.persistence.FidoCredentialRepository;
 
 @Configuration
 @EnableConfigurationProperties(FidoProperties.class)

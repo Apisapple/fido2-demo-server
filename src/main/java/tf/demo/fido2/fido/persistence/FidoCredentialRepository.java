@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.persistence;
 
 import com.yubico.webauthn.CredentialRepository;
 import com.yubico.webauthn.RegisteredCredential;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-class FidoCredentialRepository implements CredentialRepository {
+public class FidoCredentialRepository implements CredentialRepository {
   private final FidoUserJpaRepository users;
   private final FidoCredentialJpaRepository credentials;
 

@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "fido_ceremonies")
-class FidoCeremonyEntity {
-  enum Type {
+public class FidoCeremonyEntity {
+  public enum Type {
     REGISTRATION,
     AUTHENTICATION
   }
@@ -36,7 +36,8 @@ class FidoCeremonyEntity {
 
   protected FidoCeremonyEntity() {}
 
-  FidoCeremonyEntity(UUID id, Type type, String username, String requestJson, Instant expiresAt) {
+  public FidoCeremonyEntity(
+      UUID id, Type type, String username, String requestJson, Instant expiresAt) {
     this.id = id;
     this.type = type;
     this.username = username;
@@ -44,23 +45,23 @@ class FidoCeremonyEntity {
     this.expiresAt = expiresAt;
   }
 
-  UUID getId() {
+  public UUID getId() {
     return id;
   }
 
-  Type getType() {
+  public Type getType() {
     return type;
   }
 
-  String getUsername() {
+  public String getUsername() {
     return username;
   }
 
-  String getRequestJson() {
+  public String getRequestJson() {
     return requestJson;
   }
 
-  boolean isExpired(Instant now) {
+  public boolean isExpired(Instant now) {
     return !expiresAt.isAfter(now);
   }
 }

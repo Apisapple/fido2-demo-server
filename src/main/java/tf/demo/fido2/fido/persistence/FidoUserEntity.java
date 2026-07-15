@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "fido_users")
-class FidoUserEntity {
+public class FidoUserEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -27,25 +27,25 @@ class FidoUserEntity {
 
   protected FidoUserEntity() {}
 
-  FidoUserEntity(String username, String displayName, byte[] userHandle) {
+  public FidoUserEntity(String username, String displayName, byte[] userHandle) {
     this.username = username;
     this.displayName = displayName;
     this.userHandle = userHandle;
   }
 
-  Long getId() {
+  public Long getId() {
     return id;
   }
 
-  String getUsername() {
+  public String getUsername() {
     return username;
   }
 
-  String getDisplayName() {
+  public String getDisplayName() {
     return displayName;
   }
 
-  byte[] getUserHandle() {
+  public byte[] getUserHandle() {
     return userHandle.clone();
   }
 }

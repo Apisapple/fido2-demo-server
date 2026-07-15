@@ -1,9 +1,12 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.application;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import tf.demo.fido2.fido.config.FidoProperties;
+import tf.demo.fido2.fido.persistence.FidoCeremonyEntity;
+import tf.demo.fido2.fido.persistence.FidoCeremonyJpaRepository;
 
 @Service
 class FidoCeremonyService {

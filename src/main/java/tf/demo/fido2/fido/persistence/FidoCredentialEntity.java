@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "fido_credentials")
-class FidoCredentialEntity {
+public class FidoCredentialEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -35,7 +35,7 @@ class FidoCredentialEntity {
 
   protected FidoCredentialEntity() {}
 
-  FidoCredentialEntity(
+  public FidoCredentialEntity(
       FidoUserEntity user, byte[] credentialId, byte[] publicKeyCose, long signatureCount) {
     this.user = user;
     this.credentialId = credentialId;
@@ -43,23 +43,23 @@ class FidoCredentialEntity {
     this.signatureCount = signatureCount;
   }
 
-  FidoUserEntity getUser() {
+  public FidoUserEntity getUser() {
     return user;
   }
 
-  byte[] getCredentialId() {
+  public byte[] getCredentialId() {
     return credentialId.clone();
   }
 
-  byte[] getPublicKeyCose() {
+  public byte[] getPublicKeyCose() {
     return publicKeyCose.clone();
   }
 
-  long getSignatureCount() {
+  public long getSignatureCount() {
     return signatureCount;
   }
 
-  void updateSignatureCount(long signatureCount) {
+  public void updateSignatureCount(long signatureCount) {
     this.signatureCount = signatureCount;
   }
 }

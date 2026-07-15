@@ -1,4 +1,4 @@
-package tf.demo.fido2.fido;
+package tf.demo.fido2.fido.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
