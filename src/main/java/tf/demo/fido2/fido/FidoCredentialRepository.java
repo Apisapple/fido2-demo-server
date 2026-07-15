@@ -4,7 +4,6 @@ import com.yubico.webauthn.CredentialRepository;
 import com.yubico.webauthn.RegisteredCredential;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,10 +42,7 @@ class FidoCredentialRepository implements CredentialRepository {
   @Override
   @Transactional(readOnly = true)
   public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
-    return users.findAll().stream()
-        .filter(user -> Arrays.equals(user.getUserHandle(), userHandle.getBytes()))
-        .map(FidoUserEntity::getUsername)
-        .findFirst();
+    return users.findByUserHandle(userHandle.getBytes()).map(FidoUserEntity::getUsername);
   }
 
   @Override
@@ -60,16 +56,17 @@ class FidoCredentialRepository implements CredentialRepository {
   @Override
   @Transactional(readOnly = true)
   public Set<RegisteredCredential> lookupAll(ByteArray credentialId) {
-    return credentials.findAll().stream()
-        .filter(c -> Arrays.equals(c.getCredentialId(), credentialId.getBytes()))
-        .map(
-            c ->
-                RegisteredCredential.builder()
-                    .credentialId(new ByteArray(c.getCredentialId()))
-                    .userHandle(new ByteArray(c.getUser().getUserHandle()))
-                    .publicKeyCose(new ByteArray(c.getPublicKeyCose()))
-                    .signatureCount(c.getSignatureCount())
-                    .build())
+    return credentials.findByCredentialId(credentialId.getBytes()).stream()
+        .map(this::toRegisteredCredential)
         .collect(Collectors.toSet());
+  }
+
+  private RegisteredCredential toRegisteredCredential(FidoCredentialEntity credential) {
+    return RegisteredCredential.builder()
+        .credentialId(new ByteArray(credential.getCredentialId()))
+        .userHandle(new ByteArray(credential.getUser().getUserHandle()))
+        .publicKeyCose(new ByteArray(credential.getPublicKeyCose()))
+        .signatureCount(credential.getSignatureCount())
+        .build();
   }
 }

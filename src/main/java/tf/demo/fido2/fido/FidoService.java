@@ -13,9 +13,6 @@ import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
 import com.yubico.webauthn.data.UserIdentity;
 import com.yubico.webauthn.data.UserVerificationRequirement;
 import java.security.SecureRandom;
-import java.time.Clock;
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,25 +23,21 @@ import tools.jackson.databind.ObjectMapper;
 public class FidoService {
   private static final SecureRandom RANDOM = new SecureRandom();
   private final RelyingParty relyingParty;
-  private final FidoProperties properties;
   private final FidoUserJpaRepository users;
   private final FidoCredentialJpaRepository credentials;
-  private final FidoCeremonyJpaRepository ceremonies;
+  private final FidoCeremonyService ceremonyService;
   private final ObjectMapper objectMapper;
-  private final Clock clock = Clock.systemUTC();
 
   FidoService(
       RelyingParty relyingParty,
-      FidoProperties properties,
       FidoUserJpaRepository users,
       FidoCredentialJpaRepository credentials,
-      FidoCeremonyJpaRepository ceremonies,
+      FidoCeremonyService ceremonyService,
       ObjectMapper objectMapper) {
     this.relyingParty = relyingParty;
-    this.properties = properties;
     this.users = users;
     this.credentials = credentials;
-    this.ceremonies = ceremonies;
+    this.ceremonyService = ceremonyService;
     this.objectMapper = objectMapper;
   }
 
@@ -72,12 +65,12 @@ public class FidoService {
 
   @Transactional(noRollbackFor = IllegalArgumentException.class)
   public void finishRegistration(UUID ceremonyId, String credentialJson) {
-    FidoCeremonyEntity ceremony = consume(ceremonyId, FidoCeremonyEntity.Type.REGISTRATION);
+    FidoCeremonyEntity ceremony =
+        ceremonyService.consume(ceremonyId, FidoCeremonyEntity.Type.REGISTRATION);
     PublicKeyCredentialCreationOptions request = registrationRequest(ceremony.getRequestJson());
     var result = finishRegistration(request, credentialJson);
     FidoUserEntity user = users.findByUsername(ceremony.getUsername()).orElseThrow();
-    if (credentials.findAll().stream()
-        .anyMatch(c -> Arrays.equals(c.getCredentialId(), result.getKeyId().getId().getBytes()))) {
+    if (credentials.existsByCredentialId(result.getKeyId().getId().getBytes())) {
       throw new IllegalArgumentException("credential is already registered");
     }
     credentials.save(
@@ -101,52 +94,24 @@ public class FidoService {
 
   @Transactional(noRollbackFor = IllegalArgumentException.class)
   public AuthenticationResult finishAuthentication(UUID ceremonyId, String credentialJson) {
-    FidoCeremonyEntity ceremony = consume(ceremonyId, FidoCeremonyEntity.Type.AUTHENTICATION);
+    FidoCeremonyEntity ceremony =
+        ceremonyService.consume(ceremonyId, FidoCeremonyEntity.Type.AUTHENTICATION);
     AssertionRequest request = assertionRequest(ceremony.getRequestJson());
     var result = finishAssertion(request, credentialJson);
     if (!result.isSuccess()) throw new IllegalArgumentException("assertion verification failed");
     FidoCredentialEntity credential =
-        credentials.findAll().stream()
-            .filter(c -> Arrays.equals(c.getCredentialId(), result.getCredentialId().getBytes()))
-            .findFirst()
-            .orElseThrow();
+        credentials
+            .findByCredentialId(result.getCredentialId().getBytes())
+            .orElseThrow(() -> new IllegalArgumentException("unknown credential"));
     credential.updateSignatureCount(result.getSignatureCount());
     return new AuthenticationResult(ceremony.getUsername(), result.isUserVerified());
   }
 
   private CeremonyOptions saveCeremony(
       FidoCeremonyEntity.Type type, String username, String requestJson) {
-    UUID id = UUID.randomUUID();
-    ceremonies.save(
-        new FidoCeremonyEntity(
-            id, type, username, requestJson, Instant.now(clock).plus(properties.challengeTtl())));
+    UUID id = ceremonyService.create(type, username, requestJson);
     try {
       return new CeremonyOptions(id, objectMapper.readTree(requestJson));
-    } catch (Exception exception) {
-      throw new IllegalStateException("could not serialize WebAuthn request", exception);
-    }
-  }
-
-  private FidoCeremonyEntity consume(UUID id, FidoCeremonyEntity.Type type) {
-    FidoCeremonyEntity ceremony =
-        ceremonies.findById(id).orElseThrow(() -> new IllegalArgumentException("unknown ceremony"));
-    ceremonies.delete(ceremony);
-    if (ceremony.getType() != type || ceremony.isExpired(Instant.now(clock)))
-      throw new IllegalArgumentException("expired or invalid ceremony");
-    return ceremony;
-  }
-
-  private String toJson(PublicKeyCredentialCreationOptions request) {
-    try {
-      return request.toJson();
-    } catch (Exception exception) {
-      throw new IllegalStateException("could not serialize WebAuthn request", exception);
-    }
-  }
-
-  private String toJson(AssertionRequest request) {
-    try {
-      return request.toJson();
     } catch (Exception exception) {
       throw new IllegalStateException("could not serialize WebAuthn request", exception);
     }
@@ -168,6 +133,22 @@ public class FidoService {
       return PublicKeyCredentialCreationOptions.fromJson(json);
     } catch (Exception exception) {
       throw new IllegalStateException("could not read WebAuthn request", exception);
+    }
+  }
+
+  private String toJson(PublicKeyCredentialCreationOptions request) {
+    return serializeRequest(request::toJson);
+  }
+
+  private String toJson(AssertionRequest request) {
+    return serializeRequest(request::toJson);
+  }
+
+  private String serializeRequest(JsonSerializer serializer) {
+    try {
+      return serializer.serialize();
+    } catch (Exception exception) {
+      throw new IllegalStateException("could not serialize WebAuthn request", exception);
     }
   }
 
@@ -196,6 +177,11 @@ public class FidoService {
     byte[] handle = new byte[32];
     RANDOM.nextBytes(handle);
     return new FidoUserEntity(username.trim(), displayName.trim(), handle);
+  }
+
+  @FunctionalInterface
+  private interface JsonSerializer {
+    String serialize() throws Exception;
   }
 
   public record CeremonyOptions(UUID ceremonyId, JsonNode publicKey) {}
