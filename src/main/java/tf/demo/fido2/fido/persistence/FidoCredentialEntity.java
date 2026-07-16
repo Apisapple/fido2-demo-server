@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,8 @@ public class FidoCredentialEntity {
   @Column(nullable = false)
   private long signatureCount;
 
+  private Instant lastAuthenticatedAt;
+
   public FidoCredentialEntity(
       FidoUserEntity user, byte[] credentialId, byte[] publicKeyCose, long signatureCount) {
     this.user = user;
@@ -54,7 +57,8 @@ public class FidoCredentialEntity {
     return publicKeyCose.clone();
   }
 
-  public void updateSignatureCount(long signatureCount) {
+  public void recordAuthentication(long signatureCount, Instant authenticatedAt) {
     this.signatureCount = signatureCount;
+    this.lastAuthenticatedAt = authenticatedAt;
   }
 }

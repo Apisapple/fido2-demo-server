@@ -20,7 +20,13 @@ import lombok.NoArgsConstructor;
 public class FidoCeremonyEntity {
   public enum Type {
     REGISTRATION,
-    AUTHENTICATION
+    AUTHENTICATION,
+    DISCOVERABLE_AUTHENTICATION
+  }
+
+  public enum State {
+    PENDING,
+    CONSUMED
   }
 
   @Id private UUID id;
@@ -29,8 +35,7 @@ public class FidoCeremonyEntity {
   @Column(nullable = false)
   private Type type;
 
-  @Column(nullable = false)
-  private String username;
+  @Column private String username;
 
   @Lob
   @Column(nullable = false)
@@ -39,6 +44,12 @@ public class FidoCeremonyEntity {
   @Column(nullable = false)
   private Instant expiresAt;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private State state;
+
+  private Instant consumedAt;
+
   public FidoCeremonyEntity(
       UUID id, Type type, String username, String requestJson, Instant expiresAt) {
     this.id = id;
@@ -46,9 +57,22 @@ public class FidoCeremonyEntity {
     this.username = username;
     this.requestJson = requestJson;
     this.expiresAt = expiresAt;
+    this.state = State.PENDING;
   }
 
   public boolean isExpired(Instant now) {
     return !expiresAt.isAfter(now);
+  }
+
+  public boolean isPending() {
+    return state == State.PENDING;
+  }
+
+  public void consume(Instant consumedAt) {
+    if (!isPending()) {
+      throw new IllegalStateException("ceremony has already been consumed");
+    }
+    this.state = State.CONSUMED;
+    this.consumedAt = consumedAt;
   }
 }

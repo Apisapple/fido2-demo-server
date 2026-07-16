@@ -1,0 +1,11 @@
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+body { margin: 2rem; }
+main { max-width: 44rem; margin: auto; }
+section { border: 1px solid #8886; border-radius: .5rem; margin: 1rem 0; padding: 1rem; }
+label, button { display: block; margin: .6rem 0; }
+input { margin-left: .5rem; }
+button { padding: .5rem .8rem; }
+output { display: block; min-height: 1.5rem; white-space: pre-wrap; }
+.notice { color: #9a6700; }
+.success { color: #1a7f37; }
+.failure { color: #cf222e; }

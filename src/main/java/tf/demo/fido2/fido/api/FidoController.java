@@ -43,6 +43,18 @@ class FidoController {
     return fidoService.finishAuthentication(request.ceremonyId(), request.credentialJson());
   }
 
+  @PostMapping("/authentication/discoverable/options")
+  FidoService.CeremonyOptions discoverableAuthenticationOptions() {
+    return fidoService.startDiscoverableAuthentication();
+  }
+
+  @PostMapping("/authentication/discoverable/verify")
+  FidoService.AuthenticationResult discoverableAuthenticationVerify(
+      @Valid @RequestBody Finish request) {
+    return fidoService.finishDiscoverableAuthentication(
+        request.ceremonyId(), request.credentialJson());
+  }
+
   record RegistrationStart(@NotBlank String username, @NotBlank String displayName) {}
 
   record AuthenticationStart(@NotBlank String username) {}

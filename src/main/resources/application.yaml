@@ -1,6 +1,8 @@
 spring:
   application:
     name: fido2
+  profiles:
+    default: demo
   datasource:
     url: jdbc:h2:mem:fido2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -13,6 +15,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-request-size: 64KB
+      max-file-size: 64KB
+  flyway:
+    enabled: true
 memo:
   storage: db
 fido:
@@ -21,3 +29,39 @@ fido:
   origins:
     - http://localhost:8080
   challenge-ttl: PT5M
+  ceremony-retention: PT24H
+  ceremony-cleanup-interval: PT1M
+  user-verification: REQUIRED
+  resident-key: PREFERRED
+  attestation-policy: DEMO_UNTRUSTED
+web:
+  cors-allowed-origins: []
+  max-request-bytes: 65536
+  rate-limit-capacity: 20
+  rate-limit-refill-period: PT1M
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+fido:
+  rp-id: ${FIDO_RP_ID}
+  rp-name: ${FIDO_RP_NAME:FIDO2 Demo}
+  origins: ${FIDO_ORIGINS}
+  attestation-policy: TRUSTED
+web:
+  cors-allowed-origins: ${FIDO_CORS_ORIGINS:}

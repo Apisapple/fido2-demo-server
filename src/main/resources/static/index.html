@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FIDO2 Passkey Demo</title>
+    <link rel="stylesheet" href="/demo.css" />
+    <script defer src="/demo.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>FIDO2 Passkey Demo</h1>
+      <p id="environment" class="notice"></p>
+      <section>
+        <h2>사용자</h2>
+        <label>사용자명 <input id="username" autocomplete="username webauthn" value="demo-user" /></label>
+        <label>표시 이름 <input id="displayName" value="Demo User" /></label>
+      </section>
+      <section>
+        <h2>패스키</h2>
+        <button id="register">패스키 등록</button>
+        <button id="authenticate">사용자명으로 인증</button>
+        <button id="discoverable">사용자명 없이 인증</button>
+      </section>
+      <section>
+        <h2>등록된 credential</h2>
+        <button id="loadCredentials">목록 새로고침</button>
+        <ul id="credentials"></ul>
+      </section>
+      <section aria-live="polite">
+        <h2>결과</h2>
+        <output id="result">준비됨</output>
+      </section>
+    </main>
+  </body>
+</html>
