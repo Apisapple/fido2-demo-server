@@ -9,9 +9,15 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "memos")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemoEntity {
 
   @Id
@@ -19,30 +25,13 @@ public class MemoEntity {
   private Long id;
 
   @Column(nullable = false, length = 1000)
+  @Setter
   private String content;
 
   @Column(nullable = false, updatable = false)
   private Instant createdAt;
 
-  protected MemoEntity() {}
-
   public MemoEntity(String content) {
-    this.content = content;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public Instant getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setContent(String content) {
     this.content = content;
   }
 

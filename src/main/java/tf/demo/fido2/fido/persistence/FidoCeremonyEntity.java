@@ -9,9 +9,14 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fido_ceremonies")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FidoCeremonyEntity {
   public enum Type {
     REGISTRATION,
@@ -34,8 +39,6 @@ public class FidoCeremonyEntity {
   @Column(nullable = false)
   private Instant expiresAt;
 
-  protected FidoCeremonyEntity() {}
-
   public FidoCeremonyEntity(
       UUID id, Type type, String username, String requestJson, Instant expiresAt) {
     this.id = id;
@@ -43,22 +46,6 @@ public class FidoCeremonyEntity {
     this.username = username;
     this.requestJson = requestJson;
     this.expiresAt = expiresAt;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public Type getType() {
-    return type;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getRequestJson() {
-    return requestJson;
   }
 
   public boolean isExpired(Instant now) {

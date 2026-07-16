@@ -7,9 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fido_users")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FidoUserEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,24 +30,10 @@ public class FidoUserEntity {
   @Column(nullable = false, unique = true)
   private byte[] userHandle;
 
-  protected FidoUserEntity() {}
-
   public FidoUserEntity(String username, String displayName, byte[] userHandle) {
     this.username = username;
     this.displayName = displayName;
     this.userHandle = userHandle;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getDisplayName() {
-    return displayName;
   }
 
   public byte[] getUserHandle() {

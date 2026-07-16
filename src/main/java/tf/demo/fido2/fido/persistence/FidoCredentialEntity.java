@@ -10,9 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fido_credentials")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FidoCredentialEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +38,6 @@ public class FidoCredentialEntity {
   @Column(nullable = false)
   private long signatureCount;
 
-  protected FidoCredentialEntity() {}
-
   public FidoCredentialEntity(
       FidoUserEntity user, byte[] credentialId, byte[] publicKeyCose, long signatureCount) {
     this.user = user;
@@ -43,20 +46,12 @@ public class FidoCredentialEntity {
     this.signatureCount = signatureCount;
   }
 
-  public FidoUserEntity getUser() {
-    return user;
-  }
-
   public byte[] getCredentialId() {
     return credentialId.clone();
   }
 
   public byte[] getPublicKeyCose() {
     return publicKeyCose.clone();
-  }
-
-  public long getSignatureCount() {
-    return signatureCount;
   }
 
   public void updateSignatureCount(long signatureCount) {
