@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties("web")
 public record WebSecurityProperties(
-    @DefaultValue Set<String> corsAllowedOrigins,
-    @Min(1) @DefaultValue("65536") long maxRequestBytes,
-    @Min(1) @DefaultValue("20") int rateLimitCapacity,
-    @NotNull @DefaultValue("PT1M") Duration rateLimitRefillPeriod) {}
+        @DefaultValue Set<String> corsAllowedOrigins,
+        @Min(1) @DefaultValue("65536") long maxRequestBytes,
+        @Min(1) @DefaultValue("20") int rateLimitCapacity,
+        @NotNull @DefaultValue("PT1M") Duration rateLimitRefillPeriod) {}

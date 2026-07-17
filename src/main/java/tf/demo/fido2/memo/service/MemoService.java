@@ -9,33 +9,33 @@ import tf.demo.fido2.memo.storage.MemoStorage;
 @Service
 public class MemoService {
 
-  private final MemoStorage memoStorage;
+    private final MemoStorage memoStorage;
 
-  public MemoService(MemoStorage memoStorage) {
-    this.memoStorage = memoStorage;
-  }
+    public MemoService(MemoStorage memoStorage) {
+        this.memoStorage = memoStorage;
+    }
 
-  public Memo save(String content) {
-    return memoStorage.save(content);
-  }
+    public Memo save(String content) {
+        return memoStorage.save(content);
+    }
 
-  public Optional<Memo> findById(long id) {
-    return memoStorage.findById(id);
-  }
+    public Optional<Memo> findById(long id) {
+        return memoStorage.findById(id);
+    }
 
-  public List<Memo> findAll() {
-    return memoStorage.findAll();
-  }
+    public List<Memo> findAll() {
+        return memoStorage.findAll();
+    }
 
-  public boolean deleteById(long id) {
-    return memoStorage.deleteById(id);
-  }
+    public boolean deleteById(long id) {
+        return memoStorage.deleteById(id);
+    }
 
-  public void clear() {
-    memoStorage.clear();
-  }
+    public void clear() {
+        memoStorage.clear();
+    }
 
-  public List<Memo> saveAll(List<String> contents) {
-    return memoStorage.saveAll(contents);
-  }
+    public List<Memo> saveAll(List<String> contents) {
+        return memoStorage.saveAll(contents);
+    }
 }

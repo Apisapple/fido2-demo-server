@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FidoCredentialJpaRepository extends JpaRepository<FidoCredentialEntity, Long> {
-  List<FidoCredentialEntity> findAllByUser(FidoUserEntity user);
+    List<FidoCredentialEntity> findAllByUser(FidoUserEntity user);
 
-  Optional<FidoCredentialEntity> findByCredentialId(byte[] credentialId);
+    Optional<FidoCredentialEntity> findByCredentialId(byte[] credentialId);
 
-  boolean existsByCredentialId(byte[] credentialId);
+    boolean existsByCredentialId(byte[] credentialId);
 }

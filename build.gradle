@@ -50,7 +50,7 @@ spotless {
 		target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
 		targetExclude '**/src/reference-test/**', '**/src/main/generated/**', '**/src/test/generated/**', '**/src/jmh/generated/**', '**/build/generated/**'
 		removeUnusedImports()
-		googleJavaFormat('1.35.0')
+		googleJavaFormat('1.35.0').aosp()
 		trimTrailingWhitespace()
 		endWithNewline()
 	}

@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 class FidoCeremonyCleanup {
-  private static final Logger log = LoggerFactory.getLogger(FidoCeremonyCleanup.class);
-  private final FidoCeremonyService ceremonies;
+    private static final Logger log = LoggerFactory.getLogger(FidoCeremonyCleanup.class);
+    private final FidoCeremonyService ceremonies;
 
-  FidoCeremonyCleanup(FidoCeremonyService ceremonies) {
-    this.ceremonies = ceremonies;
-  }
-
-  @Scheduled(fixedDelayString = "${fido.ceremony-cleanup-interval}")
-  void removeExpiredCeremonies() {
-    long removed = ceremonies.removeExpired();
-    if (removed > 0) {
-      log.info("event=fido_ceremony_cleanup removed={}", removed);
+    FidoCeremonyCleanup(FidoCeremonyService ceremonies) {
+        this.ceremonies = ceremonies;
     }
-  }
+
+    @Scheduled(fixedDelayString = "${fido.ceremony-cleanup-interval}")
+    void removeExpiredCeremonies() {
+        long removed = ceremonies.removeExpired();
+        if (removed > 0) {
+            log.info("event=fido_ceremony_cleanup removed={}", removed);
+        }
+    }
 }

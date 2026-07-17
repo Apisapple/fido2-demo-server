@@ -14,49 +14,49 @@ import tf.demo.fido2.memo.service.MemoService;
 @SpringBootTest(properties = "memo.storage=memory")
 class MemoServiceMemoryTest {
 
-  @Autowired private MemoService memoService;
+    @Autowired private MemoService memoService;
 
-  @AfterEach
-  void tearDown() {
-    memoService.clear();
-  }
+    @AfterEach
+    void tearDown() {
+        memoService.clear();
+    }
 
-  @Test
-  void saveStoresTrimmedMemo() {
-    Memo memo = memoService.save("  hello memo  ");
+    @Test
+    void saveStoresTrimmedMemo() {
+        Memo memo = memoService.save("  hello memo  ");
 
-    assertThat(memo.id()).isPositive();
-    assertThat(memo.content()).isEqualTo("hello memo");
-    assertThat(memoService.findAll()).containsExactly(memo);
-  }
+        assertThat(memo.id()).isPositive();
+        assertThat(memo.content()).isEqualTo("hello memo");
+        assertThat(memoService.findAll()).containsExactly(memo);
+    }
 
-  @Test
-  void findByIdReturnsSavedMemo() {
-    Memo saved = memoService.save("memo");
+    @Test
+    void findByIdReturnsSavedMemo() {
+        Memo saved = memoService.save("memo");
 
-    assertThat(memoService.findById(saved.id())).hasValue(saved);
-  }
+        assertThat(memoService.findById(saved.id())).hasValue(saved);
+    }
 
-  @Test
-  void deleteByIdRemovesMemo() {
-    Memo saved = memoService.save("memo");
+    @Test
+    void deleteByIdRemovesMemo() {
+        Memo saved = memoService.save("memo");
 
-    assertThat(memoService.deleteById(saved.id())).isTrue();
-    assertThat(memoService.findById(saved.id())).isEmpty();
-  }
+        assertThat(memoService.deleteById(saved.id())).isTrue();
+        assertThat(memoService.findById(saved.id())).isEmpty();
+    }
 
-  @Test
-  void saveRejectsBlankContent() {
-    assertThatThrownBy(() -> memoService.save("   "))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("memo content must not be blank");
-  }
+    @Test
+    void saveRejectsBlankContent() {
+        assertThatThrownBy(() -> memoService.save("   "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("memo content must not be blank");
+    }
 
-  @Test
-  void saveAllStoresEachMemo() {
-    List<Memo> saved = memoService.saveAll(List.of("a", "b"));
+    @Test
+    void saveAllStoresEachMemo() {
+        List<Memo> saved = memoService.saveAll(List.of("a", "b"));
 
-    assertThat(saved).hasSize(2);
-    assertThat(memoService.findAll()).containsExactlyElementsOf(saved);
-  }
+        assertThat(saved).hasSize(2);
+        assertThat(memoService.findAll()).containsExactlyElementsOf(saved);
+    }
 }

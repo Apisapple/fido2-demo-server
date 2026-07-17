@@ -20,25 +20,25 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemoEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false, length = 1000)
-  @Setter
-  private String content;
+    @Column(nullable = false, length = 1000)
+    @Setter
+    private String content;
 
-  @Column(nullable = false, updatable = false)
-  private Instant createdAt;
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
 
-  public MemoEntity(String content) {
-    this.content = content;
-  }
-
-  @PrePersist
-  void onCreate() {
-    if (createdAt == null) {
-      createdAt = Instant.now().truncatedTo(ChronoUnit.MICROS);
+    public MemoEntity(String content) {
+        this.content = content;
     }
-  }
+
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) {
+            createdAt = Instant.now().truncatedTo(ChronoUnit.MICROS);
+        }
+    }
 }

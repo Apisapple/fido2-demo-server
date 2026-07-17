@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Fido2Application {
 
-  public static void main(String[] args) {
-    SpringApplication.run(Fido2Application.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(Fido2Application.class, args);
+    }
 }

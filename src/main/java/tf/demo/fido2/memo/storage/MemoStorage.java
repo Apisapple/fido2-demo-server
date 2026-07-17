@@ -6,21 +6,21 @@ import tf.demo.fido2.memo.data.Memo;
 
 public interface MemoStorage {
 
-  Memo save(String content);
+    Memo save(String content);
 
-  Optional<Memo> findById(long id);
+    Optional<Memo> findById(long id);
 
-  List<Memo> findAll();
+    List<Memo> findAll();
 
-  boolean deleteById(long id);
+    boolean deleteById(long id);
 
-  void clear();
+    void clear();
 
-  default List<Memo> saveAll(List<String> contents) {
-    if (contents == null) {
-      return List.of();
+    default List<Memo> saveAll(List<String> contents) {
+        if (contents == null) {
+            return List.of();
+        }
+
+        return contents.stream().map(this::save).toList();
     }
-
-    return contents.stream().map(this::save).toList();
-  }
 }

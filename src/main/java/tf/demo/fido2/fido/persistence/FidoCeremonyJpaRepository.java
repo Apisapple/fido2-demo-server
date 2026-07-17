@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 
 public interface FidoCeremonyJpaRepository extends JpaRepository<FidoCeremonyEntity, UUID> {
-  @Lock(LockModeType.PESSIMISTIC_WRITE)
-  Optional<FidoCeremonyEntity> findWithLockById(UUID id);
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<FidoCeremonyEntity> findWithLockById(UUID id);
 
-  long deleteByExpiresAtBefore(Instant expiresAt);
+    long deleteByExpiresAtBefore(Instant expiresAt);
 }

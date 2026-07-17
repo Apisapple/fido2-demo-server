@@ -20,45 +20,45 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FidoCredentialEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "user_id")
-  private FidoUserEntity user;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private FidoUserEntity user;
 
-  @Lob
-  @Column(nullable = false, unique = true)
-  private byte[] credentialId;
+    @Lob
+    @Column(nullable = false, unique = true)
+    private byte[] credentialId;
 
-  @Lob
-  @Column(nullable = false)
-  private byte[] publicKeyCose;
+    @Lob
+    @Column(nullable = false)
+    private byte[] publicKeyCose;
 
-  @Column(nullable = false)
-  private long signatureCount;
+    @Column(nullable = false)
+    private long signatureCount;
 
-  private Instant lastAuthenticatedAt;
+    private Instant lastAuthenticatedAt;
 
-  public FidoCredentialEntity(
-      FidoUserEntity user, byte[] credentialId, byte[] publicKeyCose, long signatureCount) {
-    this.user = user;
-    this.credentialId = credentialId;
-    this.publicKeyCose = publicKeyCose;
-    this.signatureCount = signatureCount;
-  }
+    public FidoCredentialEntity(
+            FidoUserEntity user, byte[] credentialId, byte[] publicKeyCose, long signatureCount) {
+        this.user = user;
+        this.credentialId = credentialId;
+        this.publicKeyCose = publicKeyCose;
+        this.signatureCount = signatureCount;
+    }
 
-  public byte[] getCredentialId() {
-    return credentialId.clone();
-  }
+    public byte[] getCredentialId() {
+        return credentialId.clone();
+    }
 
-  public byte[] getPublicKeyCose() {
-    return publicKeyCose.clone();
-  }
+    public byte[] getPublicKeyCose() {
+        return publicKeyCose.clone();
+    }
 
-  public void recordAuthentication(long signatureCount, Instant authenticatedAt) {
-    this.signatureCount = signatureCount;
-    this.lastAuthenticatedAt = authenticatedAt;
-  }
+    public void recordAuthentication(long signatureCount, Instant authenticatedAt) {
+        this.signatureCount = signatureCount;
+        this.lastAuthenticatedAt = authenticatedAt;
+    }
 }

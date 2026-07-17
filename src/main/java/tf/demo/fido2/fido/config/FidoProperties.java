@@ -15,18 +15,18 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties("fido")
 public record FidoProperties(
-    @NotBlank String rpId,
-    @NotBlank String rpName,
-    @NotEmpty Set<String> origins,
-    @NotNull Duration challengeTtl,
-    @NotNull @DefaultValue("PT24H") Duration ceremonyRetention,
-    @NotNull @DefaultValue("PT1M") Duration ceremonyCleanupInterval,
-    @NotNull @DefaultValue("REQUIRED") UserVerificationRequirement userVerification,
-    @NotNull @DefaultValue("PREFERRED") ResidentKeyRequirement residentKey,
-    AuthenticatorAttachment authenticatorAttachment,
-    @NotNull @DefaultValue("DEMO_UNTRUSTED") AttestationPolicy attestationPolicy) {
-  public enum AttestationPolicy {
-    DEMO_UNTRUSTED,
-    TRUSTED
-  }
+        @NotBlank String rpId,
+        @NotBlank String rpName,
+        @NotEmpty Set<String> origins,
+        @NotNull Duration challengeTtl,
+        @NotNull @DefaultValue("PT24H") Duration ceremonyRetention,
+        @NotNull @DefaultValue("PT1M") Duration ceremonyCleanupInterval,
+        @NotNull @DefaultValue("REQUIRED") UserVerificationRequirement userVerification,
+        @NotNull @DefaultValue("PREFERRED") ResidentKeyRequirement residentKey,
+        AuthenticatorAttachment authenticatorAttachment,
+        @NotNull @DefaultValue("DEMO_UNTRUSTED") AttestationPolicy attestationPolicy) {
+    public enum AttestationPolicy {
+        DEMO_UNTRUSTED,
+        TRUSTED
+    }
 }

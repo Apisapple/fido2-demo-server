@@ -15,20 +15,20 @@ import tf.demo.fido2.fido.application.FidoService;
 @RestController
 @RequestMapping("/api/fido/users")
 class FidoCredentialManagementController {
-  private final FidoService fidoService;
+    private final FidoService fidoService;
 
-  FidoCredentialManagementController(FidoService fidoService) {
-    this.fidoService = fidoService;
-  }
+    FidoCredentialManagementController(FidoService fidoService) {
+        this.fidoService = fidoService;
+    }
 
-  @GetMapping("/{username}/credentials")
-  List<FidoService.CredentialSummary> credentials(@PathVariable String username) {
-    return fidoService.credentials(username);
-  }
+    @GetMapping("/{username}/credentials")
+    List<FidoService.CredentialSummary> credentials(@PathVariable String username) {
+        return fidoService.credentials(username);
+    }
 
-  @DeleteMapping("/{username}/credentials/{credentialId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  void deleteCredential(@PathVariable String username, @PathVariable String credentialId) {
-    fidoService.deleteCredential(username, credentialId);
-  }
+    @DeleteMapping("/{username}/credentials/{credentialId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteCredential(@PathVariable String username, @PathVariable String credentialId) {
+        fidoService.deleteCredential(username, credentialId);
+    }
 }
